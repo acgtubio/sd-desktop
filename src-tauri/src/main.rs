@@ -3,7 +3,7 @@
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![greet, get_headers])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
@@ -11,4 +11,11 @@ fn main() {
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hello, {}", name)
+}
+
+#[tauri::command]
+fn get_headers() -> Vec<String> {
+    let vec: Vec<String> = vec!["Name".to_string(), "Address".to_string()];
+
+    vec
 }
