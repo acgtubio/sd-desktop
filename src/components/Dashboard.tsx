@@ -8,8 +8,13 @@ export const Dashboard: Component = (props) => {
     return invoke("get_headers");
   });
 
+  const [data] = createResource(async () => {
+    return invoke("fetch_clients");
+  });
+
   createEffect(() => {
     console.log(headers());
+    console.log(data());
   });
 
   return (
@@ -25,7 +30,16 @@ export const Dashboard: Component = (props) => {
           </Suspense>
         </tr>
       </thead>
-
+      <tbody>
+        <Suspense fallback={<div>Loading Data...</div>}>
+          <For each={data()}>{(item, i) =>
+            <tr>
+              <td>{item.firstname + " " + item.lastname}</td>
+              <td>{item.address}</td>
+            </tr>
+          }</For>
+        </Suspense>
+      </tbody>
     </table>
   )
 }
