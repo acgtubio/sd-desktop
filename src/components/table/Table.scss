@@ -1,0 +1,20 @@
+.table-head {
+	@apply bg-neutral-200;
+	
+	& tr {
+		& :first-child {
+			@apply rounded-tl-lg;
+			@apply rounded-bl-lg;
+		}
+		& :last-child {
+			@apply rounded-tr-lg;
+			@apply rounded-br-lg;
+		}
+	}
+}
+
+.table-body {
+	& > tr + tr {
+		border-top: 1px solid rgb(229 229 229);
+	}
+}

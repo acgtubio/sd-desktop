@@ -31,7 +31,7 @@ async fn init_mongo() -> mongodb::error::Result<Client> {
         .run_command(doc! { "ping": 1 }, None)
         .await?;
 
-    println!("Pinged the document");
+    println!("Connected to database.");
 
     Ok(client)
 }

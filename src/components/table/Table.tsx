@@ -1,5 +1,6 @@
 import { createResource, createEffect, Suspense, For } from "solid-js";
 import { invoke } from '@tauri-apps/api';
+import './Table.scss';
 
 export const Table = () => {
   const [headers] = createResource(async () => {
@@ -17,22 +18,22 @@ export const Table = () => {
 
   return (
     <table class="w-full">
-      <thead class="text-lg border-b">
+      <thead class="table-head text-sm">
         <tr>
           <Suspense fallback="Fetching Headers">
             <For each={headers()}>{(header, i) =>
-              <th class="text-left py-2">
+              <th class="text-left py-2 px-6">
                 {header}
               </th>
             }</For>
           </Suspense>
         </tr>
       </thead>
-      <tbody class="text-md">
+      <tbody class="text-sm [&_td]:px-6 [&_td]:py-2 table-body">
         <Suspense fallback={<div>Loading Data...</div>}>
           <For each={data()}>{(item, i) =>
-            <tr>
-              <td>{item.firstname + " " + item.lastname}</td>
+            <tr class="hover:bg-neutral-100 cursor-pointer">
+              <td class="font-medium">{item.firstname + " " + item.lastname}</td>
               <td>{item.address}</td>
             </tr>
           }</For>
