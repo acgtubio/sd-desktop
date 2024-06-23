@@ -1,10 +1,17 @@
-import { createResource, createEffect, Suspense, For } from "solid-js";
+import { createResource, createEffect, Suspense, For, Setter } from "solid-js";
 import { invoke } from '@tauri-apps/api';
 import './Table.scss';
 import { usePageContext } from "../../state/PageState";
+import { ClientInformationData, useClientInformationContext } from "../../state/ClientInformationState";
+
+type MongoId = {
+  $oid: string,
+}
 
 export const Table = () => {
   const { setPageState } = usePageContext();
+  const { setClientId } = useClientInformationContext() || {};
+
   let trElement: HTMLTableRowElement;
 
   const [headers] = createResource(async () => {
@@ -22,8 +29,11 @@ export const Table = () => {
     console.groupEnd();
   });
 
-  const tableRowClickHandler = (e: MouseEvent<HTMLTableRowElement>) => {
+  const tableRowClickHandler = (id: MongoId, e: MouseEvent<HTMLTableRowElement>) => {
     setPageState("user");
+
+    if (!setClientId) return;
+    setClientId(id.$oid);
   }
 
   return (
@@ -43,7 +53,7 @@ export const Table = () => {
       <tbody class="text-sm [&_td]:px-6 [&_td]:py-2 table-body">
         <Suspense fallback={<div>Loading Data...</div>}>
           <For each={data()}>{(item, i) =>
-            <tr class="hover:bg-neutral-100 cursor-pointer" ref={trElement} onClick={tableRowClickHandler}>
+            <tr class="hover:bg-neutral-100 cursor-pointer" ref={trElement} onClick={[tableRowClickHandler, item._id]}>
               <td class="font-medium">{item.firstname + " " + item.lastname}</td>
               <td>{item.address}</td>
             </tr>

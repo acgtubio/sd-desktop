@@ -1,8 +1,8 @@
-import { createContext, createSignal, useContext } from "solid-js";
+import { ParentComponent, createContext, createSignal, useContext } from "solid-js";
 
 const PageContext = createContext();
 
-export const PageState = (props) => {
+export const PageState: ParentComponent<{}> = (props) => {
   const [pageState, setPageState] = createSignal("dashboard");
 
   return (

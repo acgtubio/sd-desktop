@@ -1,16 +1,23 @@
 import { Accessor, ParentComponent, Setter, createContext, createSignal, useContext } from "solid-js";
 
 export type ClientInformationData = {
-  clientId: Accessor<string>,
+  ConsumeClientId: () => string,
   setClientId: Setter<string>,
 }
 const ClientInformationContext = createContext<ClientInformationData>();
 
-export const ClientInformationProvider: ParentComponent<{}> = (props) => {
+export const ClientInformation: ParentComponent<{}> = (props) => {
   const [clientId, setClientId] = createSignal<string>("");
 
+  const ConsumeClientId = (): string => {
+    const storedClientId = clientId();
+    setClientId("");
+
+    return storedClientId;
+  }
+
   return (
-    <ClientInformationContext.Provider value={{ clientId, setClientId }}>
+    <ClientInformationContext.Provider value={{ ConsumeClientId, setClientId }}>
       {props.children}
     </ClientInformationContext.Provider>
   )
