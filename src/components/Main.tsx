@@ -1,6 +1,7 @@
 import { Dynamic } from "solid-js/web"
 import { Dashboard } from "./dashboard/Dashboard"
 import { usePageContext } from "../state/PageState"
+import { ClientProfile } from "./client/ClientInformation"
 
 const pageContentOptions = {
   "dashboard": {
@@ -9,12 +10,12 @@ const pageContentOptions = {
   },
   "user": {
     "header": "Patient Information",
-    "content": () => <Dashboard />,
+    "content": () => <ClientProfile />,
   },
 }
 
 export const Main = () => {
-  const { pageState, setPageState } = usePageContext();
+  const { pageState } = usePageContext();
 
   return (
     <main class='w-full p-5'>
