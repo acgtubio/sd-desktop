@@ -14,7 +14,12 @@ async fn main() -> mongodb::error::Result<()> {
 
     tauri::Builder::default()
         .manage(client)
-        .invoke_handler(tauri::generate_handler![greet, get_headers, fetch_clients])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            get_headers,
+            fetch_clients,
+            fetch_client_data
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 
@@ -56,6 +61,23 @@ async fn fetch_clients(client: tauri::State<'_, Client>) -> Result<Vec<Document>
     }
 
     Ok(results)
+}
+
+#[tauri::command]
+async fn fetch_client_data(id: String, client: tauri::State<'_, Client>) -> Result<Document, ()> {
+    println!("Client ID from Client: {}", id);
+    let data = client
+        .database("sabayle")
+        .collection("clients")
+        .find_one(doc! { "_id": id }, None)
+        .await
+        .unwrap();
+
+    if let Some(d) = data {
+        Ok(d)
+    } else {
+        Err(())
+    }
 }
 
 #[tauri::command]

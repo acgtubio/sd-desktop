@@ -2,7 +2,7 @@ import { createResource, createEffect, Suspense, For, Setter } from "solid-js";
 import { invoke } from '@tauri-apps/api';
 import './Table.scss';
 import { usePageContext } from "../../state/PageState";
-import { ClientInformationData, useClientInformationContext } from "../../state/ClientInformationState";
+import { useClientInformationContext } from "../../state/ClientInformationState";
 
 type MongoId = {
   $oid: string,
