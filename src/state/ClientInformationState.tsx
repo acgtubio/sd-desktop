@@ -3,6 +3,7 @@ import { Accessor, ParentComponent, Setter, createContext, createSignal, useCont
 export type ClientInformationData = {
   ConsumeClientId: () => string,
   SetClientId: (clientId: string) => void,
+  GetClientId: () => Accessor<string>
 }
 const ClientInformationContext = createContext<ClientInformationData>();
 
@@ -28,8 +29,12 @@ export const ClientInformation: ParentComponent<{}> = (props) => {
     console.groupEnd();
   }
 
+  const GetClientId = (): Accessor<string> => {
+    return clientId;
+  }
+
   return (
-    <ClientInformationContext.Provider value={{ ConsumeClientId, SetClientId }}>
+    <ClientInformationContext.Provider value={{ ConsumeClientId, SetClientId, GetClientId }}>
       {props.children}
     </ClientInformationContext.Provider>
   )

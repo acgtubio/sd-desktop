@@ -1,6 +1,8 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use std::str::FromStr;
+
 use futures::TryStreamExt;
 use mongodb::{
     bson::{doc, Document},
@@ -64,16 +66,18 @@ async fn fetch_clients(client: tauri::State<'_, Client>) -> Result<Vec<Document>
 }
 
 #[tauri::command]
-async fn fetch_client_data(id: String, client: tauri::State<'_, Client>) -> Result<Document, ()> {
+async fn fetch_client_data(id: &str, client: tauri::State<'_, Client>) -> Result<Document, ()> {
     println!("Client ID from Client: {}", id);
+    let bson_id = mongodb::bson::oid::ObjectId::from_str(id).unwrap();
     let data = client
         .database("sabayle")
         .collection("clients")
-        .find_one(doc! { "_id": id }, None)
+        .find_one(Some(doc! { "_id": bson_id}), None)
         .await
         .unwrap();
 
     if let Some(d) = data {
+        println!("{}", d);
         Ok(d)
     } else {
         Err(())

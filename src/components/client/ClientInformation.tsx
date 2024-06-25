@@ -4,20 +4,17 @@ import { invoke } from "@tauri-apps/api";
 
 export const ClientProfile: Component = () => {
   const [clientData, setClientData] = createSignal();
+  const { ConsumeClientId, GetClientId } = useClientInformationContext() || {};
 
-  onMount(() => {
-    const { ConsumeClientId } = useClientInformationContext() || {};
+  if (!ConsumeClientId || !GetClientId) return;
+  const clientId: string = ConsumeClientId();
 
-    if (!ConsumeClientId) return;
-    const clientId: string = ConsumeClientId();
+  if (!clientId) return;
+  const [client] = createResource(async () => {
+    return invoke("fetch_client_data", { "id": clientId });
+  });
 
-    const [client] = createResource(async () => {
-      return invoke("fetch_client_data", { "id": clientId })
-    });
-
-    console.group("Client Profile Mounted...");
-    console.info(clientId);
-    console.groupEnd();
+  createEffect(() => {
 
     console.group("Client Information...");
     console.info(client());
