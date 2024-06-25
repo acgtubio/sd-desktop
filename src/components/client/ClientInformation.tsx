@@ -12,7 +12,7 @@ export const ClientProfile: Component = () => {
     const clientId: string = ConsumeClientId();
 
     const [client] = createResource(async () => {
-      return invoke("fetch_client_data", { id: clientId })
+      return invoke("fetch_client_data", { "id": clientId })
     });
 
     console.group("Client Profile Mounted...");
@@ -22,9 +22,6 @@ export const ClientProfile: Component = () => {
     console.group("Client Information...");
     console.info(client());
     console.groupEnd();
-  });
-
-  createEffect(() => {
   });
 
   return (

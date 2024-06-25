@@ -10,7 +10,7 @@ type MongoId = {
 
 export const Table = () => {
   const { setPageState } = usePageContext();
-  const { setClientId } = useClientInformationContext() || {};
+  const { SetClientId } = useClientInformationContext() || {};
 
   let trElement: HTMLTableRowElement;
 
@@ -30,10 +30,10 @@ export const Table = () => {
   });
 
   const tableRowClickHandler = (id: MongoId, e: MouseEvent<HTMLTableRowElement>) => {
-    setPageState("user");
+    if (!SetClientId) return;
+    SetClientId(id.$oid);
 
-    if (!setClientId) return;
-    setClientId(id.$oid);
+    setPageState("user");
   }
 
   return (
