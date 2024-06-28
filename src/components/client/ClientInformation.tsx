@@ -6,7 +6,8 @@ type ClientData = {
   _id?: { $0id: string },
   firstname?: string,
   lastname?: string,
-  address?: string
+  address?: string,
+  balance?: string,
 }
 
 const fetchClientData = async (clientId: string): Promise<ClientData> => {
@@ -25,16 +26,23 @@ export const ClientProfile: Component = () => {
   })
 
   return (
-    <section>
+    <section class="bg-slate-50 px-7 py-4 rounded-lg shadow-md">
       <Show when={client.loading}>
         <h1>
           Loading...
         </h1>
       </Show>
       <Show when={client.state === 'ready'}>
-        <h1 class="text-3xl">
-          {client()!.firstname + " " + client()!.lastname}
-        </h1>
+        <div class="flex">
+          <h1 class="text-lg font-bold">
+            {client()!.firstname + " " + client()!.lastname}
+          </h1>
+          <div class="border px-4 py-2">
+            <h4 class="font-bold text-sm">
+              {client()!.balance}
+            </h4>
+          </div>
+        </div>
       </Show>
     </section>);
 }

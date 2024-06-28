@@ -2,6 +2,7 @@ import { Dynamic } from "solid-js/web"
 import { Dashboard } from "./dashboard/Dashboard"
 import { usePageContext } from "../state/PageState"
 import { ClientProfile } from "./client/ClientInformation"
+import { Component } from "solid-js"
 
 const pageContentOptions = {
   "dashboard": {
@@ -14,7 +15,7 @@ const pageContentOptions = {
   },
 }
 
-export const Main = () => {
+export const Main: Component = () => {
   const { pageState } = usePageContext();
 
   return (
