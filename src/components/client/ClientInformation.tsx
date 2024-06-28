@@ -1,4 +1,4 @@
-import { Accessor, Component, Setter, Show, createEffect, createResource, createSignal, onMount } from "solid-js";
+import { Accessor, Component, Resource, ResourceReturn, Setter, Show, createEffect, createResource, createSignal, onMount } from "solid-js";
 import { useClientInformationContext } from "../../state/ClientInformationState";
 import { invoke } from "@tauri-apps/api";
 
@@ -9,13 +9,13 @@ type ClientData = {
   address?: string
 }
 
-const fetchClientData = async (clientId: string) => {
+const fetchClientData = async (clientId: string): Promise<ClientData> => {
   return invoke("fetch_client_data", { "id": clientId });
 }
 
 export const ClientProfile: Component = () => {
-  const [clientId, setClientId]: [Accessor<string>, Setter<string>] = createSignal("");
-  const [client] = createResource(clientId, fetchClientData);
+  const [clientId, setClientId]: [Accessor<string>, Setter<string>] = createSignal<string>("");
+  const [client]: ResourceReturn<ClientData, unknown> = createResource<ClientData, string, unknown>(clientId, fetchClientData);
 
   onMount(() => {
     const { ConsumeClientId, GetClientId } = useClientInformationContext() || {};
@@ -25,16 +25,16 @@ export const ClientProfile: Component = () => {
   })
 
   return (
-    <div>
+    <section>
       <Show when={client.loading}>
         <h1>
           Loading...
         </h1>
       </Show>
       <Show when={client.state === 'ready'}>
-        <h1>
-          {client().firstname}
+        <h1 class="text-3xl">
+          {client()!.firstname + " " + client()!.lastname}
         </h1>
       </Show>
-    </div>);
+    </section>);
 }
