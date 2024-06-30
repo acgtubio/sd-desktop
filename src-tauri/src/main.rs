@@ -1,6 +1,9 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod sd_commands;
+use sd_commands::appointment;
+
 use std::str::FromStr;
 
 use futures::TryStreamExt;
@@ -20,7 +23,8 @@ async fn main() -> mongodb::error::Result<()> {
             greet,
             get_headers,
             fetch_clients,
-            fetch_client_data
+            fetch_client_data,
+            appointment::add_appointment
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -67,7 +71,6 @@ async fn fetch_clients(client: tauri::State<'_, Client>) -> Result<Vec<Document>
 
 #[tauri::command]
 async fn fetch_client_data(id: &str, client: tauri::State<'_, Client>) -> Result<Document, ()> {
-    println!("Client ID from Client: {}", id);
     let bson_id = mongodb::bson::oid::ObjectId::from_str(id).unwrap();
     let data = client
         .database("sabayle")
@@ -77,7 +80,6 @@ async fn fetch_client_data(id: &str, client: tauri::State<'_, Client>) -> Result
         .unwrap();
 
     if let Some(d) = data {
-        println!("{}", d);
         Ok(d)
     } else {
         Err(())
