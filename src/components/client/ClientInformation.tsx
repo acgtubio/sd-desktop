@@ -1,6 +1,7 @@
 import { Accessor, Component, Resource, ResourceReturn, Setter, Show, createEffect, createResource, createSignal, onMount } from "solid-js";
 import { useClientInformationContext } from "../../state/ClientInformationState";
 import { invoke } from "@tauri-apps/api";
+import { Appointments } from "../appointments/Appointments";
 
 type ClientData = {
   _id?: { $0id: string },
@@ -33,7 +34,7 @@ export const ClientProfile: Component = () => {
         </h1>
       </Show>
       <Show when={client.state === 'ready'}>
-        <div class="flex">
+        <div class="">
           <h1 class="text-lg font-bold">
             {client()!.firstname + " " + client()!.lastname}
           </h1>
@@ -43,6 +44,11 @@ export const ClientProfile: Component = () => {
             </h4>
           </div>
         </div>
+
+        <div class="bg-slate-200 rounded shadow-md">
+          <Appointments clientId={clientId} />
+        </div>
       </Show>
-    </section>);
+    </section>
+  );
 }

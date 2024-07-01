@@ -2,16 +2,9 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod sd_commands;
-use sd_commands::appointment;
+use sd_commands::{appointment, clients};
 
-use std::str::FromStr;
-
-use futures::TryStreamExt;
-use mongodb::{
-    bson::{doc, Document},
-    options::ClientOptions,
-    Client,
-};
+use mongodb::{bson::doc, options::ClientOptions, Client};
 
 #[tokio::main]
 async fn main() -> mongodb::error::Result<()> {
@@ -20,11 +13,10 @@ async fn main() -> mongodb::error::Result<()> {
     tauri::Builder::default()
         .manage(client)
         .invoke_handler(tauri::generate_handler![
-            greet,
             get_headers,
-            fetch_clients,
-            fetch_client_data,
-            appointment::add_appointment
+            appointment::add_appointment,
+            clients::fetch_clients,
+            clients::fetch_client_data,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
@@ -45,45 +37,6 @@ async fn init_mongo() -> mongodb::error::Result<Client> {
     println!("Connected to database.");
 
     Ok(client)
-}
-
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}", name)
-}
-
-#[tauri::command]
-async fn fetch_clients(client: tauri::State<'_, Client>) -> Result<Vec<Document>, ()> {
-    let mut data = client
-        .database("sabayle")
-        .collection("clients")
-        .find(None, None)
-        .await
-        .unwrap();
-
-    let mut results = Vec::new();
-    while let Some(result) = data.try_next().await.unwrap() {
-        results.push(result)
-    }
-
-    Ok(results)
-}
-
-#[tauri::command]
-async fn fetch_client_data(id: &str, client: tauri::State<'_, Client>) -> Result<Document, ()> {
-    let bson_id = mongodb::bson::oid::ObjectId::from_str(id).unwrap();
-    let data = client
-        .database("sabayle")
-        .collection("clients")
-        .find_one(Some(doc! { "_id": bson_id}), None)
-        .await
-        .unwrap();
-
-    if let Some(d) = data {
-        Ok(d)
-    } else {
-        Err(())
-    }
 }
 
 #[tauri::command]

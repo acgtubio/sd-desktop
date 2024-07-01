@@ -10,7 +10,7 @@ const pageContentOptions = {
     "content": () => <Dashboard />,
   },
   "user": {
-    "header": "Patient Information",
+    "header": "Information",
     "content": () => <ClientProfile />,
   },
 }
