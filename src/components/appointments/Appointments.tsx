@@ -7,7 +7,7 @@ type AppointmentProps = {
   clientId: Accessor<string>;
 }
 
-export const Appointments: Component<{}> = (props: AppointmentProps) => {
+export const Appointments: Component<AppointmentProps> = (props: AppointmentProps) => {
   const [appt, setAppt] = createSignal<Appointment | undefined>();
   const [data, { mutate, refetch }]: ResourceReturn<string, unknown> = createResource<string, Appointment, unknown>(appt, AddAppointmentSesssion);
   const d: Appointment = {

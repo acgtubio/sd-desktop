@@ -3,7 +3,20 @@ use mongodb::{
     bson::{doc, Document},
     Client,
 };
+use serde::{Deserialize, Serialize};
 use std::str::FromStr;
+
+#[derive(Serialize, Deserialize)]
+pub struct SdClient {
+    client_id: String,
+    firstname: String,
+    lastname: String,
+    gender: String,
+    age: u32,
+    address: String,
+    balance: u32,
+    last_visit: String,
+}
 
 #[tauri::command]
 pub async fn fetch_clients(client: tauri::State<'_, Client>) -> Result<Vec<Document>, ()> {
